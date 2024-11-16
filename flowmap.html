@@ -109,7 +109,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">November 15, 2024</p>
+      <p class="date-modified">November 16, 2024</p>
     </div>
   </div>
     
@@ -147,7 +147,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="header-section-number">1.3</span> 샘플 데이터</h3>
 <p>2022년 기준 서울시 구간 인구이동 데이터를 활용한다.</p>
 <div class="cell">
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df_2022</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readxl.tidyverse.org/reference/read_excel.html">read_excel</a></span><span class="op">(</span><span class="st">"D:/My R/Korea Census Data Manipulation/9 Migration/DM_Comp_Code_Mig_2022_Sidogungu.xlsx"</span><span class="op">)</span> </span>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df_2022</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readxl.tidyverse.org/reference/read_excel.html">read_excel</a></span><span class="op">(</span><span class="st">"DM_Comp_Code_Mig_2022_Sidogungu.xlsx"</span><span class="op">)</span> </span>
 <span></span>
 <span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">df_2022</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename_with</a></span><span class="op">(</span></span>
@@ -155,7 +155,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span>    <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">contains</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Total_T"</span>, <span class="st">"Total_M"</span>, <span class="st">"Total_F"</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span></span>
-<span>    <span class="op">(</span><span class="va">Ori_CD</span> <span class="op">&gt;</span> <span class="fl">10000</span> <span class="op">&amp;</span> <span class="va">Ori_CD</span> <span class="op">&lt;</span> <span class="fl">20000</span><span class="op">)</span> <span class="op">&amp;</span> <span class="op">(</span><span class="va">Des_CD</span> <span class="op">&gt;</span> <span class="fl">10000</span> <span class="op">&amp;</span> <span class="va">Des_CD</span> <span class="op">&lt;</span> <span class="fl">20000</span><span class="op">)</span> <span class="op">&amp;</span> <span class="op">(</span><span class="va">Ori_CD</span> <span class="op">!=</span> <span class="va">Des_CD</span><span class="op">)</span></span>
+<span>    <span class="op">(</span><span class="va">Ori_CD</span> <span class="op">&gt;</span> <span class="fl">10000</span> <span class="op">&amp;</span> <span class="va">Ori_CD</span> <span class="op">&lt;</span> <span class="fl">20000</span><span class="op">)</span> <span class="op">&amp;</span> <span class="op">(</span><span class="va">Des_CD</span> <span class="op">&gt;</span> <span class="fl">10000</span> <span class="op">&amp;</span> <span class="va">Des_CD</span> <span class="op">&lt;</span> <span class="fl">20000</span><span class="op">)</span> </span>
 <span>  <span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>데이터를 정리하여 룩업용으로 사용한다.</p>
@@ -186,8 +186,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>형상데이터를 불러온다.</p>
 <div class="cell">
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">seoul</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html">st_read</a></span><span class="op">(</span><span class="st">"D:/My R/Korean Administrative Areas/행정구역 셰이프 파일/2 Original Cleaning/2022_4Q/SEOUL_SIDO_2022_4Q.shp"</span>, options <span class="op">=</span> <span class="st">"ENCODING=CP949"</span><span class="op">)</span></span>
-<span><span class="va">seoul_gu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html">st_read</a></span><span class="op">(</span><span class="st">"D:/My R/Korean Administrative Areas/행정구역 셰이프 파일/2 Original Cleaning/2022_4Q/SEOUL_GU_2022_4Q.shp"</span>, options <span class="op">=</span> <span class="st">"ENCODING=CP949"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">seoul</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html">st_read</a></span><span class="op">(</span><span class="st">"SEOUL_SIDO_2022_4Q.shp"</span>, options <span class="op">=</span> <span class="st">"ENCODING=CP949"</span><span class="op">)</span></span>
+<span><span class="va">seoul_gu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html">st_read</a></span><span class="op">(</span><span class="st">"SEOUL_GU_2022_4Q.shp"</span>, options <span class="op">=</span> <span class="st">"ENCODING=CP949"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section></section><section id="인터렉티브-유선도-제작" class="level2" data-number="2"><h2 data-number="2" class="anchored" data-anchor-id="인터렉티브-유선도-제작">
 <span class="header-section-number">2</span> 인터렉티브 유선도 제작</h2>
