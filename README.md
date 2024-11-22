@@ -36,3 +36,6 @@
 
 - [미국내 공항
   연결지도](https://snu-sds.github.io/2024_interactive_maps/globe_arc.html)
+
+- [우리나라에서 출발하는 국제선 항로
+  지도](https://snu-sds.github.io/2024_interactive_maps/korea_arc.html)
