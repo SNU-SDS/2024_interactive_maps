@@ -131,7 +131,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="header-section-number">1.2</span> 기본 패키지 불러오기</h3>
 <div class="cell">
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://haozhu233.github.io/kableExtra/">kableExtra</a></span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section></section><section id="d-아크-지도-제작" class="level2" data-number="2"><h2 data-number="2" class="anchored" data-anchor-id="d-아크-지도-제작">
 <span class="header-section-number">2</span> 3D 아크 지도 제작</h2>
@@ -185,7 +185,36 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p><a href="https://datacatalog.worldbank.org/search/dataset/0038117" class="uri">https://datacatalog.worldbank.org/search/dataset/0038117</a></p></li>
 <li><p><a href="https://ourairports.com/data/" class="uri">https://ourairports.com/data/</a></p></li>
 <li><p><a href="https://www.naturalearthdata.com/downloads/10m-cultural-vectors/airports/" class="uri">https://www.naturalearthdata.com/downloads/10m-cultural-vectors/airports/</a></p></li>
-</ul></section></main><!-- /main column --><script id="quarto-html-after-body" type="application/javascript">
+</ul>
+<p>위의 worldbank 데이터를 바탕으로 시도해 본다.</p>
+<div class="cell">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">airport_flows</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html">st_read</a></span><span class="op">(</span><span class="st">"airport_flows.shp"</span><span class="op">)</span></span>
+<span><span class="va">airport_flows_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html">st_drop_geometry</a></span><span class="op">(</span><span class="va">airport_flows</span><span class="op">)</span></span>
+<span><span class="va">airport_flows_korea</span> <span class="op">&lt;-</span> <span class="va">airport_flows_df</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span></span>
+<span>    <span class="va">Country1</span> <span class="op">==</span> <span class="st">"Korea, Republic of"</span></span>
+<span>  <span class="op">)</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>지도를 제작한다.</p>
+<div class="cell">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">korea_arc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/globe4r/man/create_globe.html">create_globe</a></span><span class="op">(</span>height <span class="op">=</span> <span class="st">"100vh"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/globe4r/man/globe_arcs.html">globe_arcs</a></span><span class="op">(</span></span>
+<span>    data <span class="op">=</span> <span class="va">airport_flows_korea</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/globe4r/man/coords.html">coords</a></span><span class="op">(</span></span>
+<span>      start_lat <span class="op">=</span> <span class="va">Airport1La</span>,</span>
+<span>      start_lon <span class="op">=</span> <span class="va">Airport1Lo</span>,</span>
+<span>      end_lat <span class="op">=</span> <span class="va">Airport2La</span>,</span>
+<span>      end_lon <span class="op">=</span> <span class="va">Airport2Lo</span>,</span>
+<span>      color <span class="op">=</span> <span class="va">TotalSeats</span>      </span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/globe4r/man/scaling_color.html">scale_arc_color</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>지도를 저장한다.</p>
+<div class="cell">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/htmlwidgets/man/saveWidget.html">saveWidget</a></span><span class="op">(</span><span class="va">korea_arc</span>, file <span class="op">=</span> <span class="st">"korea_arc.html"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section></main><!-- /main column --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");

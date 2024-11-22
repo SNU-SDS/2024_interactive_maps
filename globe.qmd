@@ -48,7 +48,7 @@ editor_options:
 
 ```{r}
 library(tidyverse)
-library(kableExtra)
+library(sf)
 ```
 
 ## 3D 아크 지도 제작
@@ -106,3 +106,38 @@ saveWidget(globe_arc, file = "globe_arc.html")
 -   <https://ourairports.com/data/>
 
 -   <https://www.naturalearthdata.com/downloads/10m-cultural-vectors/airports/>
+
+위의 worldbank 데이터를 바탕으로 시도해 본다.
+
+```{r}
+#| results: hide
+airport_flows <- st_read("airport_flows.shp")
+airport_flows_df <- st_drop_geometry(airport_flows)
+airport_flows_korea <- airport_flows_df |> 
+  filter(
+    Country1 == "Korea, Republic of"
+  ) 
+```
+
+지도를 제작한다.
+
+```{r}
+korea_arc <- create_globe(height = "100vh") |> 
+  globe_arcs(
+    data = airport_flows_korea,
+    coords(
+      start_lat = Airport1La,
+      start_lon = Airport1Lo,
+      end_lat = Airport2La,
+      end_lon = Airport2Lo,
+      color = TotalSeats      
+    )
+  ) |> 
+  scale_arc_color()
+```
+
+지도를 저장한다.
+
+```{r}
+saveWidget(korea_arc, file = "korea_arc.html")
+```
