@@ -1,0 +1,108 @@
+---
+title: "인터렉티브 3D 글로브 제작"
+author: Sang-Il Lee
+date-modified: last-modified
+number-sections: true
+format: 
+  html: 
+    toc: true
+code-link: true
+code-copy: true
+lightbox: true
+execute: 
+  warning: false
+  error: false
+  freeze: auto
+editor: visual
+editor_options: 
+  chunk_output_type: console
+---
+
+## 개요
+
+### 패키지 소개
+
+`globe4r` 패키지를 활용하여 인터랙티브 3D 글로브 지도를 제작한다. 다음과 같은 웹사이트가 유용하다.
+
+-   [패키지 홈페이지](https://globe4r.john-coene.com/)
+
+-   [Three Globe Visualization: ThreeJS](https://github.com/vasturiano/three-globe)
+
+-   [globe.gl](https://github.com/vasturiano/globe.gl?tab=readme-ov-file)
+
+`globe4r` 패키지는 다음의 6종류의 지도를 제작할 수 있게 해준다.
+
+-   [Labels](https://globe4r.john-coene.com/labels)
+
+-   [Polygons](https://globe4r.john-coene.com/choropleth)
+
+-   [Paths](https://globe4r.john-coene.com/paths)
+
+-   [Bars](https://globe4r.john-coene.com/bars)
+
+-   [Arcs](https://globe4r.john-coene.com/arcs)
+
+-   [Hex](https://globe4r.john-coene.com/hex)
+
+### 기본 패키지 불러오기
+
+```{r}
+library(tidyverse)
+library(kableExtra)
+```
+
+## 3D 아크 지도 제작
+
+패키지를 불러온다.
+
+```{r}
+# remotes::install_github("JohnCoene/globe4r")
+library(globe4r)
+```
+
+기본 데이터(usflights)를 살펴본다.
+
+```{r}
+usflights |> 
+  slice_head(n = 5)
+```
+
+이 데이터를 활용하여 3D 아크 지도를 제작한다. `globe4r` 패키지를 [참고](https://globe4r.john-coene.com/reference/globe_arcs)하였다.
+
+```{r}
+globe_arc <- create_globe(height = "100vh") |> 
+  globe_arcs(
+    data = usflights,
+    coords(
+      start_lat = start_lat,
+      start_lon = start_lon,
+      end_lat = end_lat,
+      end_lon = end_lon,
+      color = cnt      
+    )
+  ) |> 
+  scale_arc_color()
+```
+
+지도를 저장한다.
+
+```{r}
+library(htmlwidgets)
+saveWidget(globe_arc, file = "globe_arc.html")
+```
+
+인천 공항(ICN) 중심의 지도를 제작하기 위해 데이터를 수집할 필요가 있다. 가장 중요한 것은 ICN과 직접 연결되어 있는 국제공항에 대한 데이터이다.
+
+-   [FlightsFrom.com](https://www.flightsfrom.com/ICN): 158개 공항 리스트
+
+또한 전세계 국제공항의 경위도값이 필요하다.
+
+-   <https://github.com/justinelliotmeyers/DAFIF-Shapefile>
+
+-   <https://data.humdata.org/dataset/global-airports>
+
+-   <https://datacatalog.worldbank.org/search/dataset/0038117>
+
+-   <https://ourairports.com/data/>
+
+-   <https://www.naturalearthdata.com/downloads/10m-cultural-vectors/airports/>

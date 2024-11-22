@@ -29,3 +29,10 @@
 
 - [서울 구간 인구이동(2022년 기준)
   애니메이션](https://snu-sds.github.io/2024_interactive_maps/flowmapblue_ani.html)
+
+### 3D 글로브 맵
+
+- [설명문](https://snu-sds.github.io/2024_interactive_maps/globe.html)
+
+- [미국내 공항
+  연결지도](https://snu-sds.github.io/2024_interactive_maps/globe_arc.html)
