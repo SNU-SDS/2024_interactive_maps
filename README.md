@@ -49,6 +49,7 @@
 ### 파이 차트 지도
 
 - [leaflet](https://snu-sds.github.io/2024_interactive_maps/piemap.html)
+- [tmap 설명문](https://snu-sds.github.io/2024_interactive_maps/tmap_piechart.html)
 - [tmap](https://snu-sds.github.io/2024_interactive_maps/new_piemap.html)
 
 ### 그래프 - 지도 상호작용
