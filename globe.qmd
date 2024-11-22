@@ -115,7 +115,7 @@ airport_flows <- st_read("airport_flows.shp")
 airport_flows_df <- st_drop_geometry(airport_flows)
 airport_flows_korea <- airport_flows_df |> 
   filter(
-    Country1 == "Korea, Republic of"
+    Country1 == "Korea, Republic of" | Country2 == "Korea, Republic of"
   ) 
 ```
 
