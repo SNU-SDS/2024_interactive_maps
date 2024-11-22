@@ -1,0 +1,152 @@
+---
+title: "우리나라의 지역별 기대수명"
+author: "김세창"
+format:
+  dashboard:
+    css: style.css
+    orientation: columns
+    mainfont: Pretendard
+    monofont: Pretendard
+execute:
+  echo: false
+  warning: false
+  message: false
+embed-resources: true
+---
+
+```{r}
+# Load required libraries
+library(sf)            # For handling spatial data
+library(ggplot2)       # For creating plots
+library(classInt)      # For Jenks classification
+library(RColorBrewer)  # For color palettes
+library(plotly)
+library(dplyr)
+library(crosstalk)
+
+# Load the GeoJSON data
+geojson_path <- "data/SIGUN_4326.geojson"
+geo_data <- st_read(geojson_path, quiet = TRUE)
+
+# Jenks classification for '기대수명'
+jenks_breaks <- classIntervals(geo_data$기대수명, n = 7, style = "jenks")$brks
+
+# Add a classification column to geo_data
+geo_data$기대수명_class <- cut(geo_data$기대수명, breaks = jenks_breaks, include.lowest = TRUE)
+
+geo_data$hover_text <- paste(
+  "지역명: ", geo_data$SG1_FNM,
+  "<br>기대수명: ", geo_data$기대수명, "년", sep = ""
+  )
+
+geo_shared <- SharedData$new(geo_data)
+sido <- st_read("data/SIDO_polyline.geojson", quiet = TRUE)
+```
+
+```{r}
+# Create the choropleth map using ggplot2
+fig3 <- ggplot() +
+  geom_sf(data = geo_shared,
+          aes(fill = 기대수명_class,
+              text = paste(
+                "지역명: ", SG1_FNM,
+                "<br>기대수명: ", 기대수명, "세", sep = ""
+                )
+              ),
+          color = "grey10", linewidth = 0.15) +  # Plot polygons with a thin black border
+  scale_fill_brewer(palette = "BuPu", name = "기대수명") +  # Use BuPu palette for color scale
+  theme_minimal() +  # Use minimal theme
+  labs(
+    fill = "기대수명"
+  ) +
+  theme(
+    plot.title = element_text(size = 18, face = "bold"),
+    plot.subtitle = element_text(size = 14),
+    legend.title = element_text(size = 12),
+    legend.text = element_text(size = 10)
+  ) +
+  theme_void()
+```
+
+## 우리나라의 지역별 기상환경 {.sidebar width="390px"}
+
+##### **기대 수명**
+
+- 기대 수명은 현재 0세의 여명, 즉 남은 수명을 의미합니다. 쉽게 말하면, 현재 태어난 아이가 평균적으로 몇 세까지 생존할지를 나타냅니다.
+
+- 예를 들어, 우리나라의 2022년 기대 수명이란 2022년에 태어난 아이가 생존할 것으로 예상되는 평균적인 나이를 의미합니다.
+
+- 우리나라의 2022년 기준 기대 수명은 82.7세로, 전세계적으로도 높은 편입니다.
+
+- 하지만, 그렇다고 해서 우리나라의 모든 지역에서 기대 수명이 높은 것은 아닐 수 있습니다.
+
+- 어떤 지역의 기대 수명이 높을까요? 낮은 지역은 왜 낮을까요?
+
+##### **전국 평균과 비교해봅시다.**
+
+```{r}
+filter_select(
+    id = "SIDO",
+    label = "시도를 선택하세요",
+    sharedData = geo_shared,
+    group = ~SD_NM
+)
+
+filter_slider(
+    id = "life expectancy",
+    label = "기대 수명",
+    sharedData = geo_shared,
+    step = 0.1,
+    column = ~기대수명,
+    round = FALSE,
+    sep = "",
+    ticks = FALSE
+)
+```
+
+## Row {width="50%"}
+
+```{r}
+ggplotly(fig3, tooltip = "text")|> 
+    layout(
+      autosize = TRUE,
+      margin = list(l = 0, r = 0, t = 10, b = 0),  # Reduce left, right, and bottom margins
+      title = list(
+        x = 0.5,  # Center the title horizontally
+        y = 0.95, # Set title at the top
+        font = list(size = 18)
+      ),
+      height = 720,  # Adjust the height to make the plot vertically larger
+      width = 720,
+      legend = list(
+        x = 0.85,
+        y = 0.1,
+        xanchor = "right",
+        yanchor = "bottom"
+      ),
+      xaxis = list(
+        visible = FALSE
+      ),
+      yaxis = list(
+        visible = FALSE
+      )
+    ) |> 
+    highlight(on = "plotly_click", off = "plotly_doubleclick",
+              dynamic = TRUE, persistent = TRUE)
+```
+
+
+## Row {width="50%"}
+```{r}
+DT::datatable(geo_shared,
+              options = list(
+                columnDefs = list(
+                  list(
+                    visible = FALSE,
+                    targets = c(1:4, 6:13, 15:17)
+                    )
+                  )
+                )
+              )
+```
+
