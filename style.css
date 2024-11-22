@@ -1,0 +1,56 @@
+/* Embed the Pretendard font */
+@font-face {
+    font-family: 'Pretendard';
+    src: url('fonts/Pretendard-Regular.woff2') format('woff2'),
+         url('fonts/Pretendard-Regular.woff') format('woff'),
+         url('fonts/Pretendard-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Set the default font for the entire document */
+body {
+    font-family: 'Pretendard', sans-serif;  /* Ensure the font is available */
+    font-size: 16px;  /* Adjust base font size for readability */
+}
+
+/* Style for h5 tags */
+h5 {
+    font-weight: bold;
+    font-size: 1.25rem;  /* Adjust as necessary */
+}
+
+/* Style for paragraph (p) tags */
+p {
+    font-weight: normal;
+    font-size: 1rem;  /* Adjust as necessary */
+}
+
+.navbar-container.container-fluid {
+    height: 50px;
+}
+
+/* Set font size for navbar title */
+.navbar-title-text {
+    font-size: 24px;
+}
+
+/* Style for ul and li tags */
+ul, li {
+    font-size: 1rem;  /* Same as p tag */
+    font-weight: normal;  /* Ensure normal weight for consistency */
+}
+
+/* Define the 'source' class with smaller font size */
+.source {
+    font-size: 0.875rem;  /* Set smaller font size (e.g., 87.5% of the default size) */
+    color: #555;          /* Optional: Use a lighter color for source text */
+}
+
+
+rect.parent text {
+  font-size: 20px; /* Adjust size as needed */
+  font-weight: bold; /* Optional for emphasis */
+  fill: black; /* Change color if necessary */
+}
