@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.56">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="김세창">
+
+<title>Interactive Leaflet Map with Echarts</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="interactive-graph-popup_files/libs/clipboard/clipboard.min.js"></script>
+<script src="interactive-graph-popup_files/libs/quarto-html/quarto.js"></script>
+<script src="interactive-graph-popup_files/libs/quarto-html/popper.min.js"></script>
+<script src="interactive-graph-popup_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="interactive-graph-popup_files/libs/quarto-html/anchor.min.js"></script>
+<link href="interactive-graph-popup_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="interactive-graph-popup_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="interactive-graph-popup_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="interactive-graph-popup_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="interactive-graph-popup_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="interactive-graph-popup_files/libs/quarto-dashboard/quarto-dashboard.js"></script>
+<script src="interactive-graph-popup_files/libs/quarto-dashboard/stickythead.js"></script>
+<script src="interactive-graph-popup_files/libs/quarto-dashboard/datatables.min.js" kdttablesentinel="true"></script>
+<script src="interactive-graph-popup_files/libs/quarto-dashboard/pdfmake.min.js" kdttablesentinel="true"></script>
+<script src="interactive-graph-popup_files/libs/quarto-dashboard/vfs_fonts.js" kdttablesentinel="true"></script>
+<script src="interactive-graph-popup_files/libs/quarto-dashboard/web-components.js" type="module"></script>
+<script src="interactive-graph-popup_files/libs/quarto-dashboard/components.js"></script>
+<link href="interactive-graph-popup_files/libs/quarto-dashboard/datatables.min.css" rel="stylesheet" kdttablesentinel="true">
+<script src="interactive-graph-popup_files/libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+
+<script src="interactive-graph-popup_files/libs/ionrangeslider-javascript-2.3.1/js/ion.rangeSlider.min.js"></script>
+
+<script src="interactive-graph-popup_files/libs/strftime-0.9.2/strftime-min.js"></script>
+
+<link href="interactive-graph-popup_files/libs/ionrangeslider-css-2.3.1/css/ion.rangeSlider.css" rel="stylesheet">
+
+<link href="interactive-graph-popup_files/libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
+
+<script src="interactive-graph-popup_files/libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+
+<link href="interactive-graph-popup_files/libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+
+<script src="interactive-graph-popup_files/libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+
+<link href="interactive-graph-popup_files/libs/leaflet-1.3.1/leaflet.css" rel="stylesheet">
+
+<script src="interactive-graph-popup_files/libs/leaflet-1.3.1/leaflet.js"></script>
+
+<link href="interactive-graph-popup_files/libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet">
+
+<script src="interactive-graph-popup_files/libs/proj4-2.6.2/proj4.min.js"></script>
+
+<script src="interactive-graph-popup_files/libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+
+<link href="interactive-graph-popup_files/libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet">
+
+<script src="interactive-graph-popup_files/libs/leaflet-binding-2.2.2/leaflet.js"></script>
+
+<link href="interactive-graph-popup_files/libs/leaflet-easybutton-1.3.1/easy-button.css" rel="stylesheet">
+
+<script src="interactive-graph-popup_files/libs/leaflet-easybutton-1.3.1/easy-button.js"></script>
+
+<script src="interactive-graph-popup_files/libs/leaflet-easybutton-1.3.1/EasyButton-binding.js"></script>
+
+<link href="interactive-graph-popup_files/libs/leaflet-locationfilter2-0.1.1/locationfilter.css" rel="stylesheet">
+
+<script src="interactive-graph-popup_files/libs/leaflet-locationfilter2-0.1.1/locationfilter.js"></script>
+
+<script src="interactive-graph-popup_files/libs/leaflet-locationfilter2-0.1.1/locationfilter-bindings.js"></script>
+
+<link href="interactive-graph-popup_files/libs/ionicons-2.0.1/ionicons.min.css" rel="stylesheet">
+
+<script src="interactive-graph-popup_files/libs/leaflet-providers-2.0.0/leaflet-providers_2.0.0.js"></script>
+
+<script src="interactive-graph-popup_files/libs/leaflet-providers-plugin-2.2.2/leaflet-providers-plugin.js"></script>
+
+<script src="interactive-graph-popup_files/libs/popup-0.0.1/popup.js"></script>
+
+<link id="iframe-서울_graph-attachment" rel="attachment" href="interactive-graph-popup_files/libs/iframe-0.0.1/서울_graph.html">
+
+<link id="iframe-인천_graph-attachment" rel="attachment" href="interactive-graph-popup_files/libs/iframe-0.0.1/인천_graph.html">
+
+<link id="iframe-양평_graph-attachment" rel="attachment" href="interactive-graph-popup_files/libs/iframe-0.0.1/양평_graph.html">
+
+<link id="iframe-대관령_graph-attachment" rel="attachment" href="interactive-graph-popup_files/libs/iframe-0.0.1/대관령_graph.html">
+
+<link id="iframe-강릉_graph-attachment" rel="attachment" href="interactive-graph-popup_files/libs/iframe-0.0.1/강릉_graph.html">
+
+<link id="iframe-서산_graph-attachment" rel="attachment" href="interactive-graph-popup_files/libs/iframe-0.0.1/서산_graph.html">
+
+<link id="iframe-대전_graph-attachment" rel="attachment" href="interactive-graph-popup_files/libs/iframe-0.0.1/대전_graph.html">
+
+<link id="iframe-청주_graph-attachment" rel="attachment" href="interactive-graph-popup_files/libs/iframe-0.0.1/청주_graph.html">
+
+<link id="iframe-전주_graph-attachment" rel="attachment" href="interactive-graph-popup_files/libs/iframe-0.0.1/전주_graph.html">
+
+<link id="iframe-광주_graph-attachment" rel="attachment" href="interactive-graph-popup_files/libs/iframe-0.0.1/광주_graph.html">
+
+<link id="iframe-목포_graph-attachment" rel="attachment" href="interactive-graph-popup_files/libs/iframe-0.0.1/목포_graph.html">
+
+<link id="iframe-대구_graph-attachment" rel="attachment" href="interactive-graph-popup_files/libs/iframe-0.0.1/대구_graph.html">
+
+<link id="iframe-울산_graph-attachment" rel="attachment" href="interactive-graph-popup_files/libs/iframe-0.0.1/울산_graph.html">
+
+<link id="iframe-부산_graph-attachment" rel="attachment" href="interactive-graph-popup_files/libs/iframe-0.0.1/부산_graph.html">
+
+<link id="iframe-제주_graph-attachment" rel="attachment" href="interactive-graph-popup_files/libs/iframe-0.0.1/제주_graph.html">
+
+<link id="iframe-서귀포_graph-attachment" rel="attachment" href="interactive-graph-popup_files/libs/iframe-0.0.1/서귀포_graph.html">
+
+<link id="iframe-울릉도_graph-attachment" rel="attachment" href="interactive-graph-popup_files/libs/iframe-0.0.1/울릉도_graph.html">
+
+<link href="interactive-graph-popup_files/libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
+
+<script src="interactive-graph-popup_files/libs/datatables-binding-0.33/datatables.js"></script>
+
+<link href="interactive-graph-popup_files/libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
+
+<link href="interactive-graph-popup_files/libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet">
+
+<script src="interactive-graph-popup_files/libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
+
+
+
+</head>
+
+<body class="quarto-dashboard dashboard-fill dashboard-sidebar fullcontent">
+
+<header id="quarto-dashboard-header">
+<nav class="navbar navbar-expand-md slim" data-bs-theme="dark">
+  <div class="navbar-container container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-controls="dashboard-collapse" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>    
+
+
+    <div class="navbar-brand-container">       
+
+      <div class="navbar-title">
+        <div class="navbar-title-text"><a href="#">Interactive Leaflet Map with Echarts</a></div>
+        
+        <div class="navbar-author">김세창</div>
+      </div>
+    </div>
+<div id="dashboard-collapse" class="navbar-collapse collapse"><ul class="navbar-nav navbar-nav-scroll me-auto" role="tablist"><li class="nav-item" role="presentation"><a id="tab-case-1" class="nav-link active" data-bs-toggle="tab" role="tab" data-bs-target="#case-1" data-scrolling="false" href="#case-1" aria-controls="case-1" aria-selected="true"><span class="nav-link-text">Case 1</span></a></li><li class="nav-item" role="presentation"><a id="tab-case-2" class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="#case-2" data-scrolling="false" href="#case-2" aria-controls="case-2" aria-selected="false"><span class="nav-link-text">Case 2</span></a></li></ul></div></div>
+</nav>
+</header>
+<div class="page-layout-custom quarto-dashboard-content bslib-gap-spacing html-fill-container bslib-page-fill quarto-dashboard-pages dashboard-sidebar-container">  
+
+<div class="bslib-sidebar-layout html-fill-item html-fill-container" data-bslib-sidebar-open="desktop" data-bslib-sidebar-init="true" style=" --bslib-sidebar-width: 330px" data-bslib-sidebar-border="false" data-bslib-sidebar-border-radius="false"><div class="main html-fill-container html-fill-item"><div class="sidebar-content html-fill-item html-fill-container">
+<div class="tab-content bslib-grid html-fill-item html-fill-container" style="display: grid; grid-template-columns: minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div id="case-1" class="dashboard-page tab-pane show active html-fill-item html-fill-container" data-orientation="columns" aria-labelledby="tab-case-1">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 45fr) minmax(3em, 55fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, 1fr); grid-auto-columns: minmax(0, 1fr);">
+<div class="card cell html-fill-item html-fill-container bslib-card" data-title="관측소별 기후 그래프" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title html-fill-item html-fill-container">관측소별 기후 그래프</div></div>
+<div class="card-body html-fill-item html-fill-container">
+<div class="cell-output-display html-fill-item html-fill-container">
+<div class="leaflet html-widget html-fill-item html-fill-container" id="htmlwidget-78bf1adba697f3b0498b" style="width:100%;height:406px;"></div>
+<script type="application/json" data-for="htmlwidget-78bf1adba697f3b0498b">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addSelect","args":["SharedDataa0d43dd4"]},{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,"Open Street Map",{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addProviderTiles","args":["CartoDB.Voyager",null,"CartoDB Voyager Map",{"errorTileUrl":"","noWrap":false,"detectRetina":false}]},{"method":"addProviderTiles","args":["CartoDB.Positron",null,"CartoDB Positron Map",{"errorTileUrl":"","noWrap":false,"detectRetina":false}]},{"method":"addCircleMarkers","args":[[37.571411,37.47759,37.48857,37.686924,37.75147,36.77661,36.372,36.63924,35.8215,35.17291,34.81689,35.828,35.582588,35.10468,33.51411,33.24612,37.48129],[126.969572,126.62436,127.49447,128.758698,128.89098,126.49391,127.37212,127.44066,127.15496,126.891516,126.38121,128.6522,129.33458,129.03203,126.52968,126.565331,130.89864],10,null,"1",{"interactive":true,"className":"","stroke":true,"color":"#03F","weight":1,"opacity":0.5,"fill":true,"fillColor":"#00539C","fillOpacity":0.8},null,null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},{"ctKey":["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17"],"ctGroup":"SharedDataa0d43dd4"}]},{"method":"addMarkers","args":[[37.571411,37.47759,37.48857,37.686924,37.75147,36.77661,36.372,36.63924,35.8215,35.17291,34.81689,35.828,35.582588,35.10468,33.51411,33.24612,37.48129],[126.969572,126.62436,127.49447,128.758698,128.89098,126.49391,127.37212,127.44066,127.15496,126.891516,126.38121,128.6522,129.33458,129.03203,126.52968,126.565331,130.89864],{"iconUrl":{"data":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP6zwAAAgcBApocMXEAAAAASUVORK5CYII=","index":0},"iconWidth":1,"iconHeight":1},null,"1",{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},null,null,null,null,["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17"],{"interactive":false,"permanent":true,"direction":"top","opacity":1,"offset":[-0.5,21],"textsize":14,"textOnly":true,"style":{"color":"white","text-shadow":"-1px 0 black, 0 1px black, 1px 0 black, 0 -0.8px black, 0 0 7px black"},"className":"","sticky":true},{"ctKey":["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17"],"ctGroup":"SharedDataa0d43dd4"}]},{"method":"iframePopup","args":[["서울_graph.html","인천_graph.html","양평_graph.html","대관령_graph.html","강릉_graph.html","서산_graph.html","대전_graph.html","청주_graph.html","전주_graph.html","광주_graph.html","목포_graph.html","대구_graph.html","울산_graph.html","부산_graph.html","제주_graph.html","서귀포_graph.html","울릉도_graph.html"],"1",[600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600],[400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400],["l","l","l","l","l","l","l","l","l","l","l","l","l","l","l","l","l"],["서울_graph","인천_graph","양평_graph","대관령_graph","강릉_graph","서산_graph","대전_graph","청주_graph","전주_graph","광주_graph","목포_graph","대구_graph","울산_graph","부산_graph","제주_graph","서귀포_graph","울릉도_graph"]]},{"method":"addLayersControl","args":[["Open Street Map","CartoDB Voyager Map","CartoDB Positron Map"],[],{"collapsed":true,"autoZIndex":true,"position":"topright"}]}],"limits":{"lat":[33.24612,37.75147],"lng":[126.38121,130.89864]}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div><div class="tabset html-fill-item html-fill-container" width="55%">
+<div class="html-fill-item html-fill-container bslib-grid" data-width="55%" style="display: grid; grid-template-rows: minmax(3em, 1fr); grid-auto-columns: minmax(0, 1fr);">
+<div class="card cell html-fill-item html-fill-container bslib-card" data-title="관측소별 월·연평균 기온" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title html-fill-item html-fill-container">관측소별 월·연평균 기온</div></div>
+<div class="card-body html-fill-item html-fill-container">
+<div class="cell-output-display html-fill-item html-fill-container">
+<div class="datatables html-widget html-fill-item html-fill-container" id="htmlwidget-55d8c30d25d37b05fa96" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-55d8c30d25d37b05fa96">{"x":{"crosstalkOptions":{"key":["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17"],"group":"SharedDataa0d43dd4"},"filter":"none","vertical":false,"data":[[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17],["서울","인천","양평","대관령","강릉","서산","대전","청주","전주","광주","목포","대구","울산","부산","제주","서귀포","울릉도"],["평균 기온 (℃)","평균 기온 (℃)","평균 기온 (℃)","평균 기온 (℃)","평균 기온 (℃)","평균 기온 (℃)","평균 기온 (℃)","평균 기온 (℃)","평균 기온 (℃)","평균 기온 (℃)","평균 기온 (℃)","평균 기온 (℃)","평균 기온 (℃)","평균 기온 (℃)","평균 기온 (℃)","평균 기온 (℃)","평균 기온 (℃)"],[-1.9,-1.5,-3.4,-6.9,0.9,-1.6,-1,-1.5,0,1,1.8,1.1,2.4,3.6,6.1,7.2,1.7],[0.7,0.7,-0.5,-4.6,2.7,0.1,1.4,1,2,2.9,3,3.5,4.3,5.4,6.8,8.199999999999999,2.5],[6.1,5.6,5.4,0.4,7,4.9,6.6,6.5,6.8,7.5,6.9,8.4,8.4,9.1,9.800000000000001,11,5.8],[12.6,11.5,12,7,13.1,10.9,13,13,12.9,13.4,12.4,14.5,13.7,13.8,14.2,15,11.1],[18.2,16.8,17.6,12.5,17.9,16.6,18.5,18.7,18.5,18.7,17.5,19.7,18.2,17.9,18.3,18.8,15.8],[22.7,21.3,22.2,16.2,21.3,21.3,22.7,23,22.8,22.7,21.6,23.4,21.6,21,21.7,21.8,19.1],[25.3,24.4,24.9,19.6,24.7,24.5,25.5,25.8,26.2,25.9,25.1,26.3,25.2,24.4,26.2,25.7,22.7],[26.1,25.6,25.2,19.7,25,25.3,26,26.2,26.5,26.5,26.3,26.7,26,26.1,27.2,27.2,23.8],[21.6,21.5,20,14.6,20.5,20.7,21.2,21.3,21.9,22.2,22.3,22.1,21.7,22.6,23.3,24.1,20],[15,15.3,13,8.800000000000001,15.6,14.1,14.6,14.6,15.4,16.1,16.6,16.2,16.5,17.9,18.6,19.6,15.4],[7.5,7.9,5.7,2.3,9.5,7.4,7.7,7.5,8.800000000000001,9.6,10.4,9.4,10.4,11.9,13.3,14.6,9.9],[0.2,0.7,-1.3,-4.5,3.3,0.8,1,0.6,2.2,3.2,4.2,3,4.3,5.8,8.300000000000001,9.4,4.3],[12.8,12.5,11.7,7.1,13.5,12.1,13.1,13.1,13.7,14.1,14,14.5,14.4,15,16.2,16.9,12.7],[126.969572,126.62436,127.49447,128.758698,128.89098,126.49391,127.37212,127.44066,127.15496,126.891516,126.38121,128.6522,129.33458,129.03203,126.52968,126.565331,130.89864],[37.571411,37.47759,37.48857,37.686924,37.75147,36.77661,36.372,36.63924,35.8215,35.17291,34.81689,35.828,35.582588,35.10468,33.51411,33.24612,37.48129],["contents/서울_graph.html","contents/인천_graph.html","contents/양평_graph.html","contents/대관령_graph.html","contents/강릉_graph.html","contents/서산_graph.html","contents/대전_graph.html","contents/청주_graph.html","contents/전주_graph.html","contents/광주_graph.html","contents/목포_graph.html","contents/대구_graph.html","contents/울산_graph.html","contents/부산_graph.html","contents/제주_graph.html","contents/서귀포_graph.html","contents/울릉도_graph.html"],["contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>번호<\/th>\n      <th>관측소<\/th>\n      <th>항목<\/th>\n      <th>1월<\/th>\n      <th>2월<\/th>\n      <th>3월<\/th>\n      <th>4월<\/th>\n      <th>5월<\/th>\n      <th>6월<\/th>\n      <th>7월<\/th>\n      <th>8월<\/th>\n      <th>9월<\/th>\n      <th>10월<\/th>\n      <th>11월<\/th>\n      <th>12월<\/th>\n      <th>연평균<\/th>\n      <th>Longitude<\/th>\n      <th>Latitude<\/th>\n      <th>source<\/th>\n      <th>icon<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"bPaginate":false,"dom":"ft","language":{"info":"Showing _TOTAL_ entries"},"headerCallback":"function(thead) {\n$(thead).css('font-size', '0.8em');\n}","columnDefs":[{"visible":false,"targets":[0,2,16,17,18]},{"className":"dt-right","targets":[0,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17]},{"name":"번호","targets":0},{"name":"관측소","targets":1},{"name":"항목","targets":2},{"name":"1월","targets":3},{"name":"2월","targets":4},{"name":"3월","targets":5},{"name":"4월","targets":6},{"name":"5월","targets":7},{"name":"6월","targets":8},{"name":"7월","targets":9},{"name":"8월","targets":10},{"name":"9월","targets":11},{"name":"10월","targets":12},{"name":"11월","targets":13},{"name":"12월","targets":14},{"name":"연평균","targets":15},{"name":"Longitude","targets":16},{"name":"Latitude","targets":17},{"name":"source","targets":18},{"name":"icon","targets":19}],"order":[],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data, displayNum, displayIndex, dataIndex) {\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'font-size':'80%'});\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'font-size':'80%'});\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'font-size':'80%'});\nvar value=data[3]; $(this.api().cell(row, 3).node()).css({'font-size':'80%'});\nvar value=data[4]; $(this.api().cell(row, 4).node()).css({'font-size':'80%'});\nvar value=data[5]; $(this.api().cell(row, 5).node()).css({'font-size':'80%'});\nvar value=data[6]; $(this.api().cell(row, 6).node()).css({'font-size':'80%'});\nvar value=data[7]; $(this.api().cell(row, 7).node()).css({'font-size':'80%'});\nvar value=data[8]; $(this.api().cell(row, 8).node()).css({'font-size':'80%'});\nvar value=data[9]; $(this.api().cell(row, 9).node()).css({'font-size':'80%'});\nvar value=data[10]; $(this.api().cell(row, 10).node()).css({'font-size':'80%'});\nvar value=data[11]; $(this.api().cell(row, 11).node()).css({'font-size':'80%'});\nvar value=data[12]; $(this.api().cell(row, 12).node()).css({'font-size':'80%'});\nvar value=data[13]; $(this.api().cell(row, 13).node()).css({'font-size':'80%'});\nvar value=data[14]; $(this.api().cell(row, 14).node()).css({'font-size':'80%'});\nvar value=data[15]; $(this.api().cell(row, 15).node()).css({'font-size':'80%'});\nvar value=data[16]; $(this.api().cell(row, 16).node()).css({'font-size':'80%'});\nvar value=data[17]; $(this.api().cell(row, 17).node()).css({'font-size':'80%'});\nvar value=data[18]; $(this.api().cell(row, 18).node()).css({'font-size':'80%'});\n}"},"selection":{"mode":"multiple","selected":null,"target":"row","selectable":null}},"evals":["options.headerCallback","options.rowCallback"],"jsHooks":[]}</script>
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+<div class="html-fill-item html-fill-container bslib-grid" data-width="55%" style="display: grid; grid-template-rows: minmax(3em, 1fr); grid-auto-columns: minmax(0, 1fr);">
+<div class="card cell html-fill-item html-fill-container bslib-card" data-title="관측소별 월·연강수량" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title html-fill-item html-fill-container">관측소별 월·연강수량</div></div>
+<div class="card-body html-fill-item html-fill-container">
+<div class="cell-output-display html-fill-item html-fill-container">
+<div class="datatables html-widget html-fill-item html-fill-container" id="htmlwidget-8a05527635cb01843c04" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-8a05527635cb01843c04">{"x":{"crosstalkOptions":{"key":["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17"],"group":"SharedData54f56377"},"filter":"none","vertical":false,"data":[[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17],["서울","인천","양평","대관령","강릉","서산","대전","청주","전주","광주","목포","대구","울산","부산","제주","서귀포","울릉도"],["강수량 (㎜)","강수량 (㎜)","강수량 (㎜)","강수량 (㎜)","강수량 (㎜)","강수량 (㎜)","강수량 (㎜)","강수량 (㎜)","강수량 (㎜)","강수량 (㎜)","강수량 (㎜)","강수량 (㎜)","강수량 (㎜)","강수량 (㎜)","강수량 (㎜)","강수량 (㎜)","강수량 (㎜)"],[16.8,15.9,17.2,53.1,47.9,23.5,25.5,20.6,26.9,32.6,31.8,18.6,38.6,34.5,67.5,60.7,117.4],[28.2,25.1,28,49.2,48,31.1,37.2,29,36.8,43.6,36.8,25.4,39.9,49.6,57.2,77.90000000000001,91.3],[36.9,33.8,38,72.59999999999999,65.09999999999999,41.5,51.6,42.9,53.7,61.9,64.90000000000001,49,68.40000000000001,89.7,90.59999999999999,130.3,76.40000000000001],[72.90000000000001,63.5,72.5,93.5,81.90000000000001,74.7,81.59999999999999,75.5,78.40000000000001,86.59999999999999,80.3,70.59999999999999,96.90000000000001,140.9,89.7,187,97.8],[103.6,96.3,94.40000000000001,108.2,79.2,101.1,91.8,82.8,82.8,91.40000000000001,91.3,77.90000000000001,107.4,155.9,95.59999999999999,223.6,108.5],[129.5,106,134.2,162.5,118.5,138.2,167.3,140,159,152.6,150.2,129.2,155.5,188.4,171.2,267.6,116.8],[414.4,337.7,409,336.3,250.2,274.6,306.9,293.8,302.8,294.2,220.7,223.9,234.1,326.8,210.2,275.8,175],[348.2,274.6,330.9,368.4,292.9,283.5,299.8,274.2,289.6,326.4,209,245.3,234.1,266.5,272.3,315.7,176.7],[141.5,130.3,144.5,249.6,229.3,144.4,152.5,142.3,128.2,145,137.7,142.4,170.3,160.6,227.8,208.8,173.6],[52.2,51.1,47.1,97.59999999999999,113.9,53,59.3,58,57.3,59,58.9,50.1,74.8,79.59999999999999,95.09999999999999,100.4,100.9],[51.1,50.8,46.4,69.40000000000001,81.09999999999999,54.1,48,46.6,49.8,50.2,48.9,29.7,44.2,50.4,69.5,86.2,116.9],[22.6,22.3,21.4,34.7,36.9,34.2,29.7,26.7,34,37.1,37.2,18.7,28.4,33.8,55.6,55.6,129.3],[1417.9,1207.4,1383.6,1695.1,1444.9,1253.9,1351.2,1232.4,1299.3,1380.6,1167.7,1080.8,1292.6,1576.7,1502.3,1989.6,1480.6],[126.969572,126.62436,127.49447,128.758698,128.89098,126.49391,127.37212,127.44066,127.15496,126.891516,126.38121,128.6522,129.33458,129.03203,126.52968,126.565331,130.89864],[37.571411,37.47759,37.48857,37.686924,37.75147,36.77661,36.372,36.63924,35.8215,35.17291,34.81689,35.828,35.582588,35.10468,33.51411,33.24612,37.48129],["contents/서울_graph.html","contents/인천_graph.html","contents/양평_graph.html","contents/대관령_graph.html","contents/강릉_graph.html","contents/서산_graph.html","contents/대전_graph.html","contents/청주_graph.html","contents/전주_graph.html","contents/광주_graph.html","contents/목포_graph.html","contents/대구_graph.html","contents/울산_graph.html","contents/부산_graph.html","contents/제주_graph.html","contents/서귀포_graph.html","contents/울릉도_graph.html"],["contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>번호<\/th>\n      <th>관측소<\/th>\n      <th>항목<\/th>\n      <th>1월<\/th>\n      <th>2월<\/th>\n      <th>3월<\/th>\n      <th>4월<\/th>\n      <th>5월<\/th>\n      <th>6월<\/th>\n      <th>7월<\/th>\n      <th>8월<\/th>\n      <th>9월<\/th>\n      <th>10월<\/th>\n      <th>11월<\/th>\n      <th>12월<\/th>\n      <th>연평균<\/th>\n      <th>Longitude<\/th>\n      <th>Latitude<\/th>\n      <th>source<\/th>\n      <th>icon<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"bPaginate":false,"dom":"ft","language":{"info":"Showing _TOTAL_ entries"},"headerCallback":"function(thead) {\n$(thead).css('font-size', '0.8em');\n}","columnDefs":[{"visible":false,"targets":[0,2,16,17,18]},{"className":"dt-right","targets":[0,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17]},{"name":"번호","targets":0},{"name":"관측소","targets":1},{"name":"항목","targets":2},{"name":"1월","targets":3},{"name":"2월","targets":4},{"name":"3월","targets":5},{"name":"4월","targets":6},{"name":"5월","targets":7},{"name":"6월","targets":8},{"name":"7월","targets":9},{"name":"8월","targets":10},{"name":"9월","targets":11},{"name":"10월","targets":12},{"name":"11월","targets":13},{"name":"12월","targets":14},{"name":"연평균","targets":15},{"name":"Longitude","targets":16},{"name":"Latitude","targets":17},{"name":"source","targets":18},{"name":"icon","targets":19}],"order":[],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data, displayNum, displayIndex, dataIndex) {\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'font-size':'80%'});\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'font-size':'80%'});\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'font-size':'80%'});\nvar value=data[3]; $(this.api().cell(row, 3).node()).css({'font-size':'80%'});\nvar value=data[4]; $(this.api().cell(row, 4).node()).css({'font-size':'80%'});\nvar value=data[5]; $(this.api().cell(row, 5).node()).css({'font-size':'80%'});\nvar value=data[6]; $(this.api().cell(row, 6).node()).css({'font-size':'80%'});\nvar value=data[7]; $(this.api().cell(row, 7).node()).css({'font-size':'80%'});\nvar value=data[8]; $(this.api().cell(row, 8).node()).css({'font-size':'80%'});\nvar value=data[9]; $(this.api().cell(row, 9).node()).css({'font-size':'80%'});\nvar value=data[10]; $(this.api().cell(row, 10).node()).css({'font-size':'80%'});\nvar value=data[11]; $(this.api().cell(row, 11).node()).css({'font-size':'80%'});\nvar value=data[12]; $(this.api().cell(row, 12).node()).css({'font-size':'80%'});\nvar value=data[13]; $(this.api().cell(row, 13).node()).css({'font-size':'80%'});\nvar value=data[14]; $(this.api().cell(row, 14).node()).css({'font-size':'80%'});\nvar value=data[15]; $(this.api().cell(row, 15).node()).css({'font-size':'80%'});\nvar value=data[16]; $(this.api().cell(row, 16).node()).css({'font-size':'80%'});\nvar value=data[17]; $(this.api().cell(row, 17).node()).css({'font-size':'80%'});\nvar value=data[18]; $(this.api().cell(row, 18).node()).css({'font-size':'80%'});\n}"},"selection":{"mode":"multiple","selected":null,"target":"row","selectable":null}},"evals":["options.headerCallback","options.rowCallback"],"jsHooks":[]}</script>
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+</div>
+</div>
+</div><div id="case-2" class="dashboard-page tab-pane grid-skip html-fill-item html-fill-container" data-orientation="columns" aria-labelledby="tab-case-2">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 45fr) minmax(3em, 55fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, 1fr); grid-auto-columns: minmax(0, 1fr);">
+<div class="card cell html-fill-item html-fill-container bslib-card" data-title="관측소별 기후 그래프" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title html-fill-item html-fill-container">관측소별 기후 그래프</div></div>
+<div class="card-body html-fill-item html-fill-container">
+<div class="cell-output-display html-fill-item html-fill-container">
+<div class="leaflet html-widget html-fill-item html-fill-container" id="htmlwidget-73011ac1062b33567cce" style="width:100%;height:406px;"></div>
+<script type="application/json" data-for="htmlwidget-73011ac1062b33567cce">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addSelect","args":["SharedData54f56377"]},{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,"Open Street Map",{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addProviderTiles","args":["CartoDB.Voyager",null,"CartoDB Voyager Map",{"errorTileUrl":"","noWrap":false,"detectRetina":false}]},{"method":"addProviderTiles","args":["CartoDB.Positron",null,"CartoDB Positron Map",{"errorTileUrl":"","noWrap":false,"detectRetina":false}]},{"method":"addMarkers","args":[[37.571411,37.47759,37.48857,37.686924,37.75147,36.77661,36.372,36.63924,35.8215,35.17291,34.81689,35.828,35.582588,35.10468,33.51411,33.24612,37.48129],[126.969572,126.62436,127.49447,128.758698,128.89098,126.49391,127.37212,127.44066,127.15496,126.891516,126.38121,128.6522,129.33458,129.03203,126.52968,126.565331,130.89864],null,null,"1",{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},null,null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},{"ctKey":["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17"],"ctGroup":"SharedData54f56377"}]},{"method":"iframePopup","args":[["서울_graph.html","인천_graph.html","양평_graph.html","대관령_graph.html","강릉_graph.html","서산_graph.html","대전_graph.html","청주_graph.html","전주_graph.html","광주_graph.html","목포_graph.html","대구_graph.html","울산_graph.html","부산_graph.html","제주_graph.html","서귀포_graph.html","울릉도_graph.html"],"1",[600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600],[400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400],["l","l","l","l","l","l","l","l","l","l","l","l","l","l","l","l","l"],["서울_graph","인천_graph","양평_graph","대관령_graph","강릉_graph","서산_graph","대전_graph","청주_graph","전주_graph","광주_graph","목포_graph","대구_graph","울산_graph","부산_graph","제주_graph","서귀포_graph","울릉도_graph"]]},{"method":"addLayersControl","args":[["Open Street Map","CartoDB Voyager Map","CartoDB Positron Map"],[],{"collapsed":true,"autoZIndex":true,"position":"topright"}]}],"limits":{"lat":[33.24612,37.75147],"lng":[126.38121,130.89864]}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div><div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, 1fr); grid-auto-columns: minmax(0, 1fr);">
+<div class="card cell html-fill-item html-fill-container bslib-card" data-title="관측소별 월·연강수량" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title html-fill-item html-fill-container">관측소별 월·연강수량</div></div>
+<div class="card-body html-fill-item html-fill-container">
+<div class="cell-output-display html-fill-item html-fill-container">
+<div class="datatables html-widget html-fill-item html-fill-container" id="htmlwidget-7e259a12a072be3593fc" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-7e259a12a072be3593fc">{"x":{"filter":"none","vertical":false,"data":[[1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9,10,10,11,11,12,12,13,13,14,14,15,15,16,16,17,17],["서울","서울","인천","인천","양평","양평","대관령","대관령","강릉","강릉","서산","서산","대전","대전","청주","청주","전주","전주","광주","광주","목포","목포","대구","대구","울산","울산","부산","부산","제주","제주","서귀포","서귀포","울릉도","울릉도"],["평균 기온 (℃)","강수량 (㎜)","평균 기온 (℃)","강수량 (㎜)","평균 기온 (℃)","강수량 (㎜)","평균 기온 (℃)","강수량 (㎜)","평균 기온 (℃)","강수량 (㎜)","평균 기온 (℃)","강수량 (㎜)","평균 기온 (℃)","강수량 (㎜)","평균 기온 (℃)","강수량 (㎜)","평균 기온 (℃)","강수량 (㎜)","평균 기온 (℃)","강수량 (㎜)","평균 기온 (℃)","강수량 (㎜)","평균 기온 (℃)","강수량 (㎜)","평균 기온 (℃)","강수량 (㎜)","평균 기온 (℃)","강수량 (㎜)","평균 기온 (℃)","강수량 (㎜)","평균 기온 (℃)","강수량 (㎜)","평균 기온 (℃)","강수량 (㎜)"],[-1.9,16.8,-1.5,15.9,-3.4,17.2,-6.9,53.1,0.9,47.9,-1.6,23.5,-1,25.5,-1.5,20.6,0,26.9,1,32.6,1.8,31.8,1.1,18.6,2.4,38.6,3.6,34.5,6.1,67.5,7.2,60.7,1.7,117.4],[0.7,28.2,0.7,25.1,-0.5,28,-4.6,49.2,2.7,48,0.1,31.1,1.4,37.2,1,29,2,36.8,2.9,43.6,3,36.8,3.5,25.4,4.3,39.9,5.4,49.6,6.8,57.2,8.199999999999999,77.90000000000001,2.5,91.3],[6.1,36.9,5.6,33.8,5.4,38,0.4,72.59999999999999,7,65.09999999999999,4.9,41.5,6.6,51.6,6.5,42.9,6.8,53.7,7.5,61.9,6.9,64.90000000000001,8.4,49,8.4,68.40000000000001,9.1,89.7,9.800000000000001,90.59999999999999,11,130.3,5.8,76.40000000000001],[12.6,72.90000000000001,11.5,63.5,12,72.5,7,93.5,13.1,81.90000000000001,10.9,74.7,13,81.59999999999999,13,75.5,12.9,78.40000000000001,13.4,86.59999999999999,12.4,80.3,14.5,70.59999999999999,13.7,96.90000000000001,13.8,140.9,14.2,89.7,15,187,11.1,97.8],[18.2,103.6,16.8,96.3,17.6,94.40000000000001,12.5,108.2,17.9,79.2,16.6,101.1,18.5,91.8,18.7,82.8,18.5,82.8,18.7,91.40000000000001,17.5,91.3,19.7,77.90000000000001,18.2,107.4,17.9,155.9,18.3,95.59999999999999,18.8,223.6,15.8,108.5],[22.7,129.5,21.3,106,22.2,134.2,16.2,162.5,21.3,118.5,21.3,138.2,22.7,167.3,23,140,22.8,159,22.7,152.6,21.6,150.2,23.4,129.2,21.6,155.5,21,188.4,21.7,171.2,21.8,267.6,19.1,116.8],[25.3,414.4,24.4,337.7,24.9,409,19.6,336.3,24.7,250.2,24.5,274.6,25.5,306.9,25.8,293.8,26.2,302.8,25.9,294.2,25.1,220.7,26.3,223.9,25.2,234.1,24.4,326.8,26.2,210.2,25.7,275.8,22.7,175],[26.1,348.2,25.6,274.6,25.2,330.9,19.7,368.4,25,292.9,25.3,283.5,26,299.8,26.2,274.2,26.5,289.6,26.5,326.4,26.3,209,26.7,245.3,26,234.1,26.1,266.5,27.2,272.3,27.2,315.7,23.8,176.7],[21.6,141.5,21.5,130.3,20,144.5,14.6,249.6,20.5,229.3,20.7,144.4,21.2,152.5,21.3,142.3,21.9,128.2,22.2,145,22.3,137.7,22.1,142.4,21.7,170.3,22.6,160.6,23.3,227.8,24.1,208.8,20,173.6],[15,52.2,15.3,51.1,13,47.1,8.800000000000001,97.59999999999999,15.6,113.9,14.1,53,14.6,59.3,14.6,58,15.4,57.3,16.1,59,16.6,58.9,16.2,50.1,16.5,74.8,17.9,79.59999999999999,18.6,95.09999999999999,19.6,100.4,15.4,100.9],[7.5,51.1,7.9,50.8,5.7,46.4,2.3,69.40000000000001,9.5,81.09999999999999,7.4,54.1,7.7,48,7.5,46.6,8.800000000000001,49.8,9.6,50.2,10.4,48.9,9.4,29.7,10.4,44.2,11.9,50.4,13.3,69.5,14.6,86.2,9.9,116.9],[0.2,22.6,0.7,22.3,-1.3,21.4,-4.5,34.7,3.3,36.9,0.8,34.2,1,29.7,0.6,26.7,2.2,34,3.2,37.1,4.2,37.2,3,18.7,4.3,28.4,5.8,33.8,8.300000000000001,55.6,9.4,55.6,4.3,129.3],[12.8,1417.9,12.5,1207.4,11.7,1383.6,7.1,1695.1,13.5,1444.9,12.1,1253.9,13.1,1351.2,13.1,1232.4,13.7,1299.3,14.1,1380.6,14,1167.7,14.5,1080.8,14.4,1292.6,15,1576.7,16.2,1502.3,16.9,1989.6,12.7,1480.6],[126.969572,126.969572,126.62436,126.62436,127.49447,127.49447,128.758698,128.758698,128.89098,128.89098,126.49391,126.49391,127.37212,127.37212,127.44066,127.44066,127.15496,127.15496,126.891516,126.891516,126.38121,126.38121,128.6522,128.6522,129.33458,129.33458,129.03203,129.03203,126.52968,126.52968,126.565331,126.565331,130.89864,130.89864],[37.571411,37.571411,37.47759,37.47759,37.48857,37.48857,37.686924,37.686924,37.75147,37.75147,36.77661,36.77661,36.372,36.372,36.63924,36.63924,35.8215,35.8215,35.17291,35.17291,34.81689,34.81689,35.828,35.828,35.582588,35.582588,35.10468,35.10468,33.51411,33.51411,33.24612,33.24612,37.48129,37.48129],["contents/서울_graph.html","contents/서울_graph.html","contents/인천_graph.html","contents/인천_graph.html","contents/양평_graph.html","contents/양평_graph.html","contents/대관령_graph.html","contents/대관령_graph.html","contents/강릉_graph.html","contents/강릉_graph.html","contents/서산_graph.html","contents/서산_graph.html","contents/대전_graph.html","contents/대전_graph.html","contents/청주_graph.html","contents/청주_graph.html","contents/전주_graph.html","contents/전주_graph.html","contents/광주_graph.html","contents/광주_graph.html","contents/목포_graph.html","contents/목포_graph.html","contents/대구_graph.html","contents/대구_graph.html","contents/울산_graph.html","contents/울산_graph.html","contents/부산_graph.html","contents/부산_graph.html","contents/제주_graph.html","contents/제주_graph.html","contents/서귀포_graph.html","contents/서귀포_graph.html","contents/울릉도_graph.html","contents/울릉도_graph.html"],["contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png","contents/number1.png"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>번호<\/th>\n      <th>관측소<\/th>\n      <th>항목<\/th>\n      <th>1월<\/th>\n      <th>2월<\/th>\n      <th>3월<\/th>\n      <th>4월<\/th>\n      <th>5월<\/th>\n      <th>6월<\/th>\n      <th>7월<\/th>\n      <th>8월<\/th>\n      <th>9월<\/th>\n      <th>10월<\/th>\n      <th>11월<\/th>\n      <th>12월<\/th>\n      <th>연평균<\/th>\n      <th>Longitude<\/th>\n      <th>Latitude<\/th>\n      <th>source<\/th>\n      <th>icon<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"bPaginate":false,"dom":"ifrt","language":{"info":"Showing _TOTAL_ entries"},"rowCallback":"function(row, data, index) {\n  if (data[1] === '대관령') {\n    $(row).hide();\n  }\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'font-size':'80%'});\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'font-size':'80%'});\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'font-size':'80%'});\nvar value=data[3]; $(this.api().cell(row, 3).node()).css({'font-size':'80%'});\nvar value=data[4]; $(this.api().cell(row, 4).node()).css({'font-size':'80%'});\nvar value=data[5]; $(this.api().cell(row, 5).node()).css({'font-size':'80%'});\nvar value=data[6]; $(this.api().cell(row, 6).node()).css({'font-size':'80%'});\nvar value=data[7]; $(this.api().cell(row, 7).node()).css({'font-size':'80%'});\nvar value=data[8]; $(this.api().cell(row, 8).node()).css({'font-size':'80%'});\nvar value=data[9]; $(this.api().cell(row, 9).node()).css({'font-size':'80%'});\nvar value=data[10]; $(this.api().cell(row, 10).node()).css({'font-size':'80%'});\nvar value=data[11]; $(this.api().cell(row, 11).node()).css({'font-size':'80%'});\nvar value=data[12]; $(this.api().cell(row, 12).node()).css({'font-size':'80%'});\nvar value=data[13]; $(this.api().cell(row, 13).node()).css({'font-size':'80%'});\nvar value=data[14]; $(this.api().cell(row, 14).node()).css({'font-size':'80%'});\nvar value=data[15]; $(this.api().cell(row, 15).node()).css({'font-size':'80%'});\nvar value=data[16]; $(this.api().cell(row, 16).node()).css({'font-size':'80%'});\nvar value=data[17]; $(this.api().cell(row, 17).node()).css({'font-size':'80%'});\nvar value=data[18]; $(this.api().cell(row, 18).node()).css({'font-size':'80%'});\n}","headerCallback":"function(thead) {\n$(thead).css('font-size', '0.8em');\n}","columnDefs":[{"visible":false,"targets":[0,2,16,17,18]},{"className":"dt-right","targets":[0,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17]},{"name":"번호","targets":0},{"name":"관측소","targets":1},{"name":"항목","targets":2},{"name":"1월","targets":3},{"name":"2월","targets":4},{"name":"3월","targets":5},{"name":"4월","targets":6},{"name":"5월","targets":7},{"name":"6월","targets":8},{"name":"7월","targets":9},{"name":"8월","targets":10},{"name":"9월","targets":11},{"name":"10월","targets":12},{"name":"11월","targets":13},{"name":"12월","targets":14},{"name":"연평균","targets":15},{"name":"Longitude","targets":16},{"name":"Latitude","targets":17},{"name":"source","targets":18},{"name":"icon","targets":19}],"order":[],"autoWidth":false,"orderClasses":false},"selection":{"mode":"multiple","selected":null,"target":"row","selectable":null}},"evals":["options.rowCallback","options.headerCallback"],"jsHooks":[]}</script>
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+<div id="3ade8a4a-fb1d-4a6c-8409-ac45482d5fc9" class="hidden html-fill-item html-fill-container">
+
+</div>
+</div>
+</div>
+</div>
+</div>
+</div></div><aside id="bslib-sidebar-1" class="sidebar html-fill-container html-fill-item"><div class="html-fill-container html-fill-item">
+<section id="지역별-기후-특성">
+<div class="h4">
+<strong>지역별 기후 특성</strong>
+</div>
+<section id="기후평년값">
+<div class="h5">
+<strong>1) 기후평년값</strong>
+</div>
+<section id="의미-0으로-끝나는-해로부터-30년-동안의-평균값">
+<div class="h6">
+-
+
+의미:
+
+’0’으로
+
+끝나는
+
+해로부터
+
+<strong>30년 동안의 평균값</strong>
+</div>
+</section>
+<section id="예시-2020년-기후평년값은-1991년2020년의-기온-강수량-등-주요-기상관측자료의-일통계값과-등을-평균하여-산출한-값이며-보통-10년마다-재산출하고-있다.">
+<div class="h6">
+-
+
+예시:
+
+2020년
+
+기후평년값은
+
+1991년~2020년의
+
+기온,
+
+강수량
+
+등
+
+주요
+
+기상관측자료의
+
+일통계값과
+
+등을
+
+평균하여
+
+산출한
+
+값이며,
+
+보통
+
+10년마다
+
+재산출하고
+
+있다.
+</div>
+</section>
+</section>
+<section id="우리나라의-기후2020년-기준">
+<div class="h5">
+<strong>2) 우리나라의 기후(2020년 기준)</strong>
+</div>
+<section id="기온-12.8">
+<div class="h6">
+-
+
+기온:
+
+12.8℃
+</div>
+</section>
+<section id="강수량-1306.3mm">
+<div class="h6">
+-
+
+강수량:
+
+1,306.3mm
+</div>
+</section>
+</section>
+<section id="최근-변화">
+<div class="h5">
+<strong>3) 최근 변화</strong>
+</div>
+<section id="기온은-10년-전보다-0.3-20년-전보다-0.5-증가하였다.">
+<div class="h6">
+-
+
+기온은
+
+10년
+
+전보다
+
+0.3℃,
+
+20년
+
+전보다
+
+0.5℃
+
+증가하였다.
+</div>
+</section>
+<section id="강수량은-10년-전보다-34.1mm-증가하였고-20년-전보다는-25.0mm-감소하였다.">
+<div class="h6">
+-
+
+강수량은
+
+10년
+
+전보다
+
+34.1mm
+
+증가하였고,
+
+20년
+
+전보다는
+
+25.0mm
+
+감소하였다.
+</div>
+</section>
+</section>
+<section id="전국-평균과-비교해봅시다.">
+<div class="h5">
+<strong>4) 전국 평균과 비교해봅시다.</strong>
+</div>
+<div class="cell-output-display">
+<div class="form-group crosstalk-input crosstalk-input-slider js-range-slider" id="mean temperature">
+<label class="control-label" for="mean temperature">평균 기온</label>
+<input data-skin="shiny" data-type="double" data-min="7.1" data-max="16.9" data-from="7.1" data-to="16.9" data-step="0.1" data-grid="false" data-grid-snap="false" data-prettify-separator="" data-keyboard="true" data-keyboard-step="1.02040816326531" data-drag-interval="true" data-data-type="number">
+<script type="application/json" data-for="mean temperature">{
+  "values": [7.1, 11.7, 12.1, 12.5, 12.7, 12.8, 13.1, 13.1, 13.5, 13.7, 14, 14.1, 14.4, 14.5, 15, 16.2, 16.9],
+  "keys": ["4", "3", "6", "2", "17", "1", "7", "8", "5", "9", "11", "10", "13", "12", "14", "15", "16"],
+  "group": ["SharedDataa0d43dd4"]
+}</script>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="form-group crosstalk-input crosstalk-input-slider js-range-slider" id="mean precipitation">
+<label class="control-label" for="mean precipitation">평균 강수량</label>
+<input data-skin="shiny" data-type="double" data-min="1080.8" data-max="1989.6" data-from="1080.8" data-to="1989.6" data-step="0.1" data-grid="false" data-grid-snap="false" data-prettify-separator="" data-keyboard="true" data-keyboard-step="0.0110035211267606" data-drag-interval="true" data-data-type="number">
+<script type="application/json" data-for="mean precipitation">{
+  "values": [1080.8, 1167.7, 1207.4, 1232.4, 1253.9, 1292.6, 1299.3, 1351.2, 1380.6, 1383.6, 1417.9, 1444.9, 1480.6, 1502.3, 1576.7, 1695.1, 1989.6],
+  "keys": ["12", "11", "2", "8", "6", "13", "9", "7", "10", "3", "1", "5", "17", "15", "14", "4", "16"],
+  "group": ["SharedData54f56377"]
+}</script>
+</div>
+</div>
+<p><br>
+데이터 출처: 기상청,「기상관측통계」, 2020.12, 2024.11.11, [종관기상] 지점별 평년값(<a href="https://kosis.kr/statHtml/statHtml.do?orgId=141&amp;tblId=DT_14102_B002&amp;conn_path=I2" class="uri">https://kosis.kr/statHtml/statHtml.do?orgId=141&amp;tblId=DT_14102_B002&amp;conn_path=I2</a>)</p>
+</section>
+</section>
+</div></aside>
+<button class="collapse-toggle" type="button" title="Toggle sidebar" aria-expanded="true" aria-controls="bslib-sidebar-1">
+    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 16 16" class="bi bi-chevron-left collapse-icon" style="fill:currentColor;" aria-hidden="true" role="img">
+      <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"></path>
+    </svg>
+</button>
+<script data-bslib-sidebar-init="">
+bslib.Sidebar.initCollapsibleAll()
+</script>
+</div>
+
+
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /container fluid -->
+
+<script type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (_event) {
+  if (window.bslib.Card) {
+    window.bslib.Card.initializeAllCards();
+  }
+}); 
+</script>
+  
+
+
+
+</body></html>
