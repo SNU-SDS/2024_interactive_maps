@@ -46,6 +46,8 @@
 
 - [기대 수명](https://snu-sds.github.io/2024_interactive_maps/Life_Expectancy.html)
 
+- [ehcarty](https://snu-sds.github.io/2024_interactive_maps/echarty_test.html)
+
 ### 파이 차트 지도
 
 - [leaflet](https://snu-sds.github.io/2024_interactive_maps/piemap.html)
