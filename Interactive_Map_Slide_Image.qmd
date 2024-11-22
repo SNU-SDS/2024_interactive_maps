@@ -1,0 +1,73 @@
+---
+title: "대한민국의 대표 간척지"
+author: "김세창"
+format:
+  dashboard:
+    css: style.css
+    include-in-header: link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+    orientation: columns
+    mainfont: Pretendard
+    monofont: Pretendard
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r}
+library(leaflet)
+library(leafpop)
+
+data <- data.frame(x = c(126.441976, 126.477560, 126.470449, 126.352627),
+                   y = c(37.458664, 35.818059, 34.523302,36.648893),
+                   name = c("인천공항", "새만금", "해남 지구", "서산 지구"),
+                   source = c(
+                     "contents/incheon_change.html",
+                     "contents/saemangeum_change.html",
+                     "contents/haenam_change.html",
+                     "https://www.youtube.com/embed/JPot5xfDlDg?si=rQNoy0qwVGmUBkJj"
+                     ),
+                   width = c(1072, 699, 700, 840),
+                   height = c(699, 724, 700, 473)
+                   )
+```
+
+## 우리나라의 주요 간척지 {.sidebar width="480px"}
+
+##### **우리나라의 갯벌**
+
+우리나라의 서·남해안은 조차가 크고 수심이 얕다. 또한 리아스식 해안이 발달하여 만 입구의 양단간에 거리는 짧으면서도 내부 간석지의 면적이 넓어 간척하기 매우 좋은 조건을 가진 곳이다. 고려 시대 및 조선 시대에는 **양곡 증산 및 군량미 조달**을 위해, 일제 강점기에는 **식민지에서의 쌀 증산과 토지 개량사업**을 목적으로 간척이 이루어졌다. 광복 후에는 **기근 해결을 위한 식량 증산** 목적으로 소규모 간척이 이루어졌고, 1970년대 이후에는 **농업 종합 개발** 목적으로, 1990년대 이후에는 **다목적 종합 개발**로 간척 사업이 추진되었다.\
+그러나 대규모 간척 사업은 **해양 생물 서식지를 완전히 파괴**하였으며, 육상에서 배출되는 오염 물질은 **연안역의 해양 생태계 건강성을 악화시켰고 다양성을 훼손**하였다. 2000년대 이후 [훼손된 연안 지역을 복원하려고 노력]{.underline}하고 있지만 선진국과 같은 비교적 규모가 큰 연안 복원은 이루어지지 않고 있으며, 몇몇 국가 기관 및 지방 자치 단체를 통해 소규모의 복원이 이루어지고 있다. 연안 생태계의 생태·사회·경제적 잠재력을 유지하고 복원하는 것은 국가 경제의 지속성을 확보하기 위한 아주 중요한 토대이다.
+
+##### **1) 인천공항**
+
+1981년 항공수요 증가로 김포국제공항이 한계에 다다를 것으로 예상되어, 새로운 공항의 필요성이 대두되었다. 오랜 논쟁 끝에 1990년, 영종도가 선정되었다. 이후 간척을 통해 인근의 삼목도, 신불도, 용유도, 그리고 잠진도를 이어 인천국제공항의 부지를 확보하였다.
+
+##### **2) 새만금**
+
+새만금은 만경강과 동진강의 하구를 방조제로 막아 진행된 우리나라 최대 규모의 간척지이다. 1991년 착공하여 매립작업과 부지 조성은 2020년에 완료되었다. 방조제 길이만 33.9km로, 세계에서 가장 긴 방조제이다. 확보된 부지만 291㎢, 담수 면적까지 포함하면 409㎢에 달하는 큰 면적을 확보하였다. 이러한 부지를 활용하여 최초 계획 당시 대부분 농지로 활용될 계획이었으나, 현재는 이차 전지 특화 지구로 지정되는 등 첨단산업의 거점으로 활용되고 있다. 그러나 수질 오염, 생태계 파괴 등의 문제 역시 심각한 수준이라는 비판도 공존한다.
+
+##### **3) 서산 지구**
+
+서산 지구는 현대건설이 1980년 5월부터 착공, 1995년 8월에 최종 준공된 간척지이다. 크게 두 지역으로 나뉘는데, A지구는 간월호, B지구는 부남호로 불린다. 이 사업으로 총 154.08㎢가 새롭게 생겨났고, 이는 대한민국 영토의 1%가 넘는 면적이다. 농경지 확보 및 첨단산업 시설 입지 등의 긍정적인 측면도 있지만, 담수호 수질이 심각하게 나빠진 부정적인 면모도 공존한다. 최근 들어 이 지역에 해수를 다시 유통하는 '역간척'을 추진 중이다.
+
+<span class="source">콘텐츠 출처: <http://nationalatlas.ngii.go.kr/pages/page_200.php></span>
+
+## Row
+
+```{r}
+leaflet(data) |> 
+  addTiles(group = "Open Street Map") |> 
+  addProviderTiles(providers$Esri.WorldImagery, group = "Esri.WorldImagery") |>
+  addMarkers(
+    ~x, ~y, group = "1"
+  ) |> 
+  leafpop:::addPopupIframes(
+    source = data$source,
+    width = data$width, height = data$height, group = "1"
+  ) |> 
+  addLayersControl(
+    baseGroups = c("Open Street Map", "Esri.WorldImagery"),
+    options = layersControlOptions(collapse = TRUE)
+    )
+```
