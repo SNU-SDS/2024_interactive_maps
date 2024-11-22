@@ -36,3 +36,7 @@
 
 - [미국내 공항
   연결지도](https://snu-sds.github.io/2024_interactive_maps/globe_arc.html)
+
+### 인터랙티브 그래프 팝업
+
+- [우리나라의 간척지](https://snu-sds.github.io/2024_interactive_maps/Interactive_Map_Slide_Image.html)
