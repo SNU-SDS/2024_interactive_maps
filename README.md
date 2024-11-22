@@ -44,4 +44,11 @@
 ### 인터랙티브 그래프 팝업
 
 - [우리나라의 간척지](https://snu-sds.github.io/2024_interactive_maps/Interactive_Map_Slide_Image.html)
+
+- [기대 수명](https://snu-sds.github.io/2024_interactive_maps/Life_Expectancy.html)
 >>>>>>> e9465e546eb5484298de1e70b359832694e598b0
+
+### 파이 차트 지도
+
+- [leaflet](https://snu-sds.github.io/2024_interactive_maps/piemap.html)
+- [tmap](https://snu-sds.github.io/2024_interactive_maps/new_piemap.html)
