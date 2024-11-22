@@ -1,0 +1,82 @@
+---
+title: "echarty_test"
+format:
+  html:
+    css: style.css
+    mainfont: Pretendard
+    monofont: Pretendard
+editor: visual
+embed-resources: true
+---
+
+## Echarty
+
+echart를 R에서 활용하게 해주는 또 다른 패키지이다.
+
+```{r}
+#| message: false
+#| warning: false
+library(crosstalk)
+library(dplyr)
+library(gapminder)
+library(echarty)
+library(RColorBrewer)
+
+# test --------------------------------------------------------------------
+data <- sf::st_read("data/SIGUN_4326.geojson", quiet = TRUE)
+sido_json <- jsonlite::read_json("data/KOR_SIDO.geojson")
+sido <- sf::st_read("data/KOR_SIDO.geojson", quiet = TRUE)
+json <- jsonlite::read_json("data/SIGUN_4326.geojson")
+row.names(data) <- data$SG1_FNM
+
+p <- ec.init(preset= FALSE,
+             series = list(
+               list(
+                 type= 'map', map= 'KOR', roam= TRUE,
+                 geoIndex = 0,
+                 data= lapply(
+                   ec.data(data, 'names'),
+                   function(x) list(name=x$SG1_FNM, value=x$기대수명)
+                   )
+                 ),
+               list(
+                 type = 'map',
+                 map = 'SID',
+                 roam = TRUE,
+                 geoIndex = 0,
+                 itemStyle = list(
+                   areaColor = 'transparent',
+                   borderColor = 'black',
+                   borderWidth = 0.7
+                 ),
+                 emphasis = list(
+                   itemStyle = list(
+                     areaColor = 'transparent'
+                   )
+                 ),
+                 silent = TRUE
+               )
+              ),
+             visualMap = list(
+               type = 'continuous', calculable = TRUE,
+               inRange = list(color = brewer.pal(8, "BuPu")),
+               min = min(data$기대수명), max = max(data$기대수명)
+               )
+             )
+p$x$registerMap <- list(list(mapName= 'KOR', geoJSON= json),
+                        list(mapName = 'SID', geoJSON = sido_json))
+
+
+p$x$opts$tooltip <- list(
+  backgroundColor= 'rgba(30,30,30,0.5)', textStyle= list(color='#FFFFFF'),
+  formatter=ec.clmn('%@<br/>기대수명: <b>%@</b>세', 'name', 'value'))
+```
+
+복잡하게 생겼다.
+
+```{r}
+#| echo: false
+p
+```
+
+이상한 점도 있다.
