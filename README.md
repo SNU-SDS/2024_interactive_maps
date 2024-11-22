@@ -52,3 +52,7 @@
 
 - [leaflet](https://snu-sds.github.io/2024_interactive_maps/piemap.html)
 - [tmap](https://snu-sds.github.io/2024_interactive_maps/new_piemap.html)
+
+### 각종 인터랙티브 그래프
+- [chorddiagram](https://snu-sds.github.io/2024_interactive_maps/return_chorddiagram.html)
+- [surburst](https://snu-sds.github.io/2024_interactive_maps/sunburst.html)
