@@ -60,3 +60,4 @@
 ### 각종 인터랙티브 그래프
 - [chorddiagram](https://snu-sds.github.io/2024_interactive_maps/return_chorddiagram.html)
 - [surburst](https://snu-sds.github.io/2024_interactive_maps/sunburst.html)
+- [인구 피라미드](https://snu-sds.github.io/2024_interactive_maps/result/01_pop_pyramid.html)
