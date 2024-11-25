@@ -1,0 +1,184 @@
+---
+title: "인터렉티브 유선도 제작"
+author: Sang-Il Lee
+date-modified: last-modified
+number-sections: true
+format: 
+  html: 
+    toc: true
+code-link: true
+code-copy: true
+lightbox: true
+execute: 
+  warning: false
+  error: false
+  freeze: auto
+editor: visual
+editor_options: 
+  chunk_output_type: console
+---
+
+## 개요
+
+### 패키지 소개
+
+`flowmapblue` 패키지를 활용하여 인터랙티브 유선도를 제작한다. 다음과 같은 웹사이트가 유용하다.
+
+-   [패키지 홈페이지](https://github.com/FlowmapBlue/flowmapblue.R)
+
+    -   [튜토리얼](https://cran.r-project.org/web/packages/flowmapblue/vignettes/flowmapblue.html)
+
+-   [BlowmapBlue 홈페이지](https://www.flowmap.blue/)
+
+-   [flowmapper](https://github.com/JohMast/flowmapper) 패키지
+
+    -   일반 R 패키지
+
+### 기본 패키지 불러오기
+
+```{r}
+library(tidyverse)
+library(readxl)
+library(sf)
+```
+
+### 샘플 데이터
+
+2022년 기준 서울시 구간 인구이동 데이터를 활용한다.
+
+```{r}
+df_2022 <- read_excel("DM_Comp_Code_Mig_2022_Sidogungu.xlsx") 
+
+df <- df_2022 |> 
+  rename_with(
+    ~ str_replace(.x, c("Total_T", "Total_M", "Total_F"), c("TTotal", "MTotal", "FTotal")),
+    contains(c("Total_T", "Total_M", "Total_F"))
+  ) |> 
+  filter(
+    (Ori_CD > 10000 & Ori_CD < 20000) & (Des_CD > 10000 & Des_CD < 20000) 
+  )
+```
+
+데이터를 정리하여 룩업용으로 사용한다.
+
+```{r}
+out_mig_sum <- df |> 
+  summarize(
+    SGG1_CD = first(Ori_CD), 
+    SGG1_NM = first(Ori_NM),
+    out_mig = sum(TTotal),
+    .by = Ori_CD
+  ) 
+in_mig_sum <- df |> 
+  summarize(
+    SGG1_CD = first(Des_CD), 
+    SGG1_NM = first(Des_NM),
+    in_mig = sum(TTotal),
+    .by = Des_CD
+  ) 
+mig_sum <- out_mig_sum |> 
+  left_join(
+    in_mig_sum |> select(SGG1_CD, in_mig), 
+    by = join_by(SGG1_CD)
+  ) |> 
+  mutate(
+    gr_mig = out_mig + in_mig, 
+    nt_mig = in_mig - out_mig
+  )
+```
+
+형상데이터를 불러온다.
+
+```{r}
+#| results: hide
+seoul <- st_read("SEOUL_SIDO_2022_4Q.shp", options = "ENCODING=CP949")
+seoul_gu <- st_read("SEOUL_GU_2022_4Q.shp", options = "ENCODING=CP949")
+```
+
+## 인터렉티브 유선도 제작
+
+### 패키지 불러오기
+
+```{r}
+library(flowmapblue)
+```
+
+### Mapbox 토큰 등록하기
+
+[Mapbox](https://account.mapbox.com/)에 가서 무료 토큰을 생성한다. 그리고 나서 `Sys.setenv()` 함수를 활용하여 등록한다. 다음의 형식을 취한다.
+
+```{r}
+Sys.setenv(MAPBOX_API_TOKEN = "YOUR_MAPBOX_ACCESS_TOKEN")
+```
+
+```{r}
+#| echo: false
+Sys.setenv(MAPBOX_API_TOKEN = "pk.eyJ1Ijoic2xlZTExMDEiLCJhIjoiY20zaWJ2bXp5MGx1ZTJscXg5NWphcG4zaiJ9.QdFkfvzX1YN5baf7oFrxFg")
+```
+
+### 위치와 플로 데이터의 설정
+
+위치 데이터는 서울시 구의 센트로이드에 대한 좌표값이 포함된 데이터를 의미한다.
+
+```{r}
+coords <- seoul_gu |> 
+  st_transform(crs = 4326) |> 
+  st_centroid() |> 
+  st_coordinates()
+locations <- seoul_gu |> 
+  mutate(
+    lon = coords[, 1],
+    lat = coords[, 2],
+    id = SGG1_CD, 
+    name = SGG1_NM
+  ) |> 
+  st_drop_geometry() |> 
+  select(
+    id, name, lon, lat
+  ) 
+```
+
+플로 데이터는 방향적 지역쌍별 플로량을 포함하고 있는 데이터이다.
+
+```{r}
+flows <- df |> 
+  select(
+    origin = Ori_CD,
+    dest = Des_CD,
+    count = TTotal
+  )
+```
+
+지도를 제작한다.
+
+```{r}
+flowmapblue <- flowmapblue(
+  locations = locations,
+  flows = flows,
+  mapboxAccessToken = Sys.getenv('MAPBOX_API_TOKEN'),
+  clustering = TRUE,
+  darkMode = TRUE,
+  animation = FALSE
+)
+```
+
+지도를 저장한다.
+
+```{r}
+library(htmlwidgets)
+saveWidget(flowmapblue, file = "flowmapblue.html")
+```
+
+애니메이션 지도를 제작해 본다.
+
+```{r}
+flowmapblue_ani <- flowmapblue(
+  locations = locations,
+  flows = flows,
+  mapboxAccessToken = Sys.getenv('MAPBOX_API_TOKEN'),
+  clustering = TRUE,
+  darkMode = TRUE,
+  animation = TRUE
+)
+saveWidget(flowmapblue_ani, file = "flowmapblue_ani.html")
+```

@@ -1,0 +1,232 @@
+---
+title: "Interactive Leaflet Map with Echarts"
+author: "김세창"
+format:
+  dashboard:
+    theme: minty
+    orientation: columns
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r}
+# Load necessary libraries
+library(leaflet)
+library(echarts4r)
+library(leafpop)
+library(htmlwidgets)
+library(readxl)
+library(htmltools)
+library(DT)
+library(dplyr)
+library(crosstalk)
+
+# Read the Excel file
+file_path <- "weather_data(2020).xlsx"
+data <- read_excel(file_path, sheet = "데이터")
+
+temp_data <- data |> filter(`항목` == "평균 기온 (℃)")
+prec_data <- data |> filter(`항목` == "강수량 (㎜)")
+
+shared_temp <- SharedData$new(temp_data)
+shared_prec <- SharedData$new(prec_data)
+
+```
+
+## 우리나라의 지역별 기상환경 {.sidebar width="330px"}
+
+#### **지역별 기후 특성**
+
+##### **1) 기후평년값**
+
+###### - 의미: '0'으로 끝나는 해로부터 **30년 동안의 평균값**
+
+###### - 예시: 2020년 기후평년값은 1991년\~2020년의 기온, 강수량 등 주요 기상관측자료의 일통계값과 등을 평균하여 산출한 값이며, 보통 10년마다 재산출하고 있다.
+
+##### **2) 우리나라의 기후(2020년 기준)**
+
+###### - 기온: 12.8℃
+
+###### - 강수량: 1,306.3mm
+
+##### **3) 최근 변화**
+
+###### - 기온은 10년 전보다 0.3℃, 20년 전보다 0.5℃ 증가하였다.
+
+###### - 강수량은 10년 전보다 34.1mm 증가하였고, 20년 전보다는 25.0mm 감소하였다.
+
+##### **4) 전국 평균과 비교해봅시다.**
+
+```{r}
+filter_slider(
+    id = "mean temperature",
+    label = "평균 기온",
+    sharedData = shared_temp,
+    step = 0.1,
+    column = ~`연평균`,
+    round = FALSE,
+    sep = "",
+    ticks = FALSE
+)
+
+filter_slider(
+    id = "mean precipitation",
+    label = "평균 강수량",
+    step = 0.1,
+    sharedData = shared_prec,
+    column = ~`연평균`,
+    round = FALSE,
+    sep = "",
+    ticks = FALSE
+)
+```
+\
+데이터 출처: 기상청,「기상관측통계」, 2020.12, 2024.11.11, \[종관기상\] 지점별 평년값(<https://kosis.kr/statHtml/statHtml.do?orgId=141&tblId=DT_14102_B002&conn_path=I2>)
+
+# Case 1
+
+## Row {width="45%"}
+
+```{r}
+#| title: 관측소별 기후 그래프
+leaflet(shared_temp) |> 
+  addTiles(group = "Open Street Map") |> 
+  addProviderTiles(providers$CartoDB.Voyager, group = "CartoDB Voyager Map") |> 
+  addProviderTiles(providers$CartoDB.Positron, group = "CartoDB Positron Map") |> 
+  addCircleMarkers(
+    ~Longitude, ~Latitude, group = "1",
+    radius = 10, weight = 1, fillOpacity = 0.8, fillColor = "#00539C"
+  ) |> 
+  addLabelOnlyMarkers(
+    ~Longitude, ~Latitude, group = "1",
+    label = ~번호,
+    labelOptions = labelOptions(
+      noHide = TRUE, textOnly = TRUE, textsize = 14,
+      direction = "top", offset = c(-0.5, 21),
+      style = list(
+        'color' = 'white',
+        "text-shadow" = sprintf(
+          "-1px 0 %s, 0 1px %s, 1px 0 %s, 0 -0.8px %s, 0 0 7px %s", 'black',
+          'black', 'black', 'black', 'black'
+          )
+        )
+      )
+  ) |> 
+  leafpop:::addPopupIframes(
+    width = 600, height = 400,
+    source = prec_data$source, group = "1"
+  ) |> 
+  addLayersControl(
+    baseGroups = c("Open Street Map", "CartoDB Voyager Map", "CartoDB Positron Map"),
+    options = layersControlOptions(collapse = TRUE)
+    )
+```
+
+::: {.tabset width="55%"}
+
+## Row {width="55%"}
+
+```{r}
+#| title: 관측소별 월·연평균 기온
+shared_temp |>
+  datatable(
+    options = list(
+      headerCallback = DT::JS(
+        "function(thead) {",
+        "$(thead).css('font-size', '0.8em');",
+        "}"
+      ),
+      dom = 'ft',
+      columnDefs = list(
+        list(
+          visible = FALSE,
+          targets = c(0, 2, 16, 17, 18)
+          )
+      )
+    ),
+    rownames = FALSE
+  ) |> 
+  formatStyle(columns = c(1:19), fontSize = '80%')
+```
+
+## Row {width="55%"}
+
+```{r}
+#| title: 관측소별 월·연강수량
+shared_prec |>
+  datatable(
+    options = list(
+      headerCallback = DT::JS(
+        "function(thead) {",
+        "$(thead).css('font-size', '0.8em');",
+        "}"
+      ),
+      dom = 'ft',
+      columnDefs = list(
+        list(
+          visible = FALSE,
+          targets = c(0, 2, 16, 17, 18)
+          )
+      )
+    ),
+    rownames = FALSE
+  ) |> 
+  formatStyle(columns = c(1:19), fontSize = '80%')
+```
+
+:::
+
+# Case 2
+
+## Row {width="45%"}
+```{r}
+#| title: 관측소별 기후 그래프
+leaflet(shared_prec) |> 
+  addTiles(group = "Open Street Map") |> 
+  addProviderTiles(providers$CartoDB.Voyager, group = "CartoDB Voyager Map") |> 
+  addProviderTiles(providers$CartoDB.Positron, group = "CartoDB Positron Map") |> 
+  addMarkers(
+    ~Longitude, ~Latitude, group = "1"
+  ) |> 
+  leafpop:::addPopupIframes(
+    width = 600, height = 400,
+    source = prec_data$source, group = "1"
+  ) |> 
+  addLayersControl(
+    baseGroups = c("Open Street Map", "CartoDB Voyager Map", "CartoDB Positron Map"),
+    options = layersControlOptions(collapse = TRUE)
+    )
+```
+
+## Row {width="55%"}
+
+```{r}
+#| title: 관측소별 월·연강수량
+data |>
+  datatable(
+    options = list(
+      rowCallback = DT::JS(
+        "function(row, data, index) {",
+        "  if (data[1] === '대관령') {",
+        "    $(row).hide();",
+        "  }",
+        "}"
+      ),
+      headerCallback = DT::JS(
+        "function(thead) {",
+        "$(thead).css('font-size', '0.8em');",
+        "}"
+      ),
+      columnDefs = list(
+        list(
+          visible = FALSE,
+          targets = c(0, 2, 16, 17, 18)
+          )
+      )
+    ),
+    rownames = FALSE
+  ) |> 
+  formatStyle(columns = c(1:19), fontSize = '80%')
+```
