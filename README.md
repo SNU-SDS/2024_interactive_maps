@@ -44,6 +44,8 @@
 
 - [우리나라의 간척지](https://snu-sds.github.io/2024_interactive_maps/Interactive_Map_Slide_Image.html)
 
+- [주요 지역의 기후](https://snu-sds.github.io/2024_interactive_maps/Climate_of_Korea.html)
+
 - [기대 수명](https://snu-sds.github.io/2024_interactive_maps/Life_Expectancy.html)
 
 - [ehcarty](https://snu-sds.github.io/2024_interactive_maps/echarty_test.html)
