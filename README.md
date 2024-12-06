@@ -62,9 +62,9 @@
 ### 각종 인터랙티브 그래프
 - [chorddiagram](https://snu-sds.github.io/2024_interactive_maps/return_chorddiagram.html)
 - [surburst](https://snu-sds.github.io/2024_interactive_maps/sunburst.html)
-- [인구 피라미드](https://snu-sds.github.io/2024_interactive_maps/result/01_pop_pyramid.html)
-- [treemap](https://snu-sds.github.io/2024_interactive_maps/result/02_treemap_foreingner_r.html)
+- [인구 피라미드](https://snu-sds.github.io/2024_interactive_maps/pop_pyramid.html)
+- [treemap](https://snu-sds.github.io/2024_interactive_maps/foreingner_treemap(2022).html)
 
 ### 인터렉티브 지도
-- [button map](https://snu-sds.github.io/2024_interactive_maps/result/03_urbanization.html)
+- [button map](https://snu-sds.github.io/2024_interactive_maps/urbanization_button_map.html)
 - [점밀도도](https://snu-sds.github.io/2024_interactive_maps/result/04_dot_density.html)
