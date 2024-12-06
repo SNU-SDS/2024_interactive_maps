@@ -67,4 +67,3 @@
 
 ### 인터렉티브 지도
 - [button map](https://snu-sds.github.io/2024_interactive_maps/urbanization_button_map.html)
-- [점밀도도](https://snu-sds.github.io/2024_interactive_maps/result/04_dot_density.html)
