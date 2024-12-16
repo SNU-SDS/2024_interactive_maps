@@ -63,7 +63,7 @@
 - [chorddiagram](https://snu-sds.github.io/2024_interactive_maps/return_chorddiagram.html)
 - [surburst](https://snu-sds.github.io/2024_interactive_maps/sunburst.html)
 - [인구 피라미드](https://snu-sds.github.io/2024_interactive_maps/pop_pyramid.html)
-- [treemap](https://snu-sds.github.io/2024_interactive_maps/foreingner_treemap(2022).html)
+- [treemap](https://snu-sds.github.io/2024_interactive_maps/foreigner_treemap(2022).html)
 
 ### 인터렉티브 지도
 - [button map](https://snu-sds.github.io/2024_interactive_maps/urbanization_button_map.html)
