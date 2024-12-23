@@ -6,6 +6,8 @@ library(tidyverse)
 library(ggiraph)
 library(patchwork)
 library(tmap)
+library(htmltools)
+library(htmlwidgets)
 
 # Data Preparing ----------------------------------------------------------
 
@@ -117,5 +119,6 @@ interactive_plot <- interactive_plot |> girafe_options(
   )
 
 interactive_plot
+saveWidget(interactive_plot, "ggiraph.html", selfcontained = TRUE)
 
-htmltools::save_html(interactive_plot, "ggiraph.html")
+# htmltools::save_html(interactive_plot, "ggiraph.html")
