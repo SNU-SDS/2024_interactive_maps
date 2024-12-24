@@ -119,6 +119,6 @@ interactive_plot <- interactive_plot |> girafe_options(
   )
 
 interactive_plot
-saveWidget(interactive_plot, "ggiraph.html", selfcontained = TRUE)
+saveWidget(interactive_plot, "ggiraph2.html", selfcontained = TRUE)
 
 # htmltools::save_html(interactive_plot, "ggiraph.html")
