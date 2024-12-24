@@ -12,20 +12,21 @@ library(htmlwidgets)
 # Data Preparing ----------------------------------------------------------
 
 median <- read_xlsx("median.xlsx")
-sgg <- st_read("bnd_sigungu_00_2020_2020_4Q.shp", options = "ENCODING=EUC-KR")
+sgg <- st_read("sigungu.shp", options = "ENCODING=EUC-KR")
 sd <- st_read("sido.shp", options = "ENCODING=EUR-KR")
 
-sgg$SIGUNGU_CD <- sgg$SIGUNGU_CD |> 
+sgg$SGG1_CD <- sgg$SGG1_CD |> 
   as.double()
 
 sgg_median <- sgg |> 
-  left_join(median, join_by(SIGUNGU_CD == code))
+  left_join(median, join_by(SGG1_CD == code))
 
 # 37, 22, 26
 median2 <- median |> 
-  filter(grepl("^(22|26|37)", code))
+  filter(grepl("^(22|26|37)", code)) |> 
+  filter(!(code %in% c(37011, 37012)))
 sgg_median2 <- sgg_median |> 
-  filter(grepl("^(22|26|37)", SIGUNGU_CD)) |> 
+  filter(grepl("^(22|26|37)", SGG1_CD)) |> 
   mutate(
     tooltip = paste0(sgg, ": ", median, "세")
   )
@@ -119,6 +120,6 @@ interactive_plot <- interactive_plot |> girafe_options(
   )
 
 interactive_plot
-saveWidget(interactive_plot, "ggiraph2.html", selfcontained = TRUE)
+saveWidget(interactive_plot, "ggiraph.html", selfcontained = TRUE)
 
 # htmltools::save_html(interactive_plot, "ggiraph.html")
