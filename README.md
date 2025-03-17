@@ -51,7 +51,6 @@
 =======
 
 - [ehcarty](https://snu-sds.github.io/2024_interactive_maps/echarty_test.html)
->>>>>>> 85f402dde17c9dd05dd15d2bc82cb1d91100e1a8
 
 ### 파이 차트 지도
 
