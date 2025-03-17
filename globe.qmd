@@ -111,7 +111,7 @@ saveWidget(globe_arc, file = "globe_arc.html")
 
 ```{r}
 #| results: hide
-airport_flows <- st_read("airport_flows.shp")
+airport_flows <- st_read("data/airport_flows.shp")
 airport_flows_df <- st_drop_geometry(airport_flows)
 airport_flows_korea <- airport_flows_df |> 
   filter(

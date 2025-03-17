@@ -47,7 +47,7 @@ library(sf)
 2022년 기준 서울시 구간 인구이동 데이터를 활용한다.
 
 ```{r}
-df_2022 <- read_excel("DM_Comp_Code_Mig_2022_Sidogungu.xlsx") 
+df_2022 <- read_excel("data/DM_Comp_Code_Mig_2022_Sidogungu.xlsx") 
 
 df <- df_2022 |> 
   rename_with(
@@ -91,8 +91,8 @@ mig_sum <- out_mig_sum |>
 
 ```{r}
 #| results: hide
-seoul <- st_read("SEOUL_SIDO_2022_4Q.shp", options = "ENCODING=CP949")
-seoul_gu <- st_read("SEOUL_GU_2022_4Q.shp", options = "ENCODING=CP949")
+seoul <- st_read("data/SEOUL_SIDO_2022_4Q.shp", options = "ENCODING=CP949")
+seoul_gu <- st_read("data/SEOUL_GU_2022_4Q.shp", options = "ENCODING=CP949")
 ```
 
 ## 인터렉티브 유선도 제작

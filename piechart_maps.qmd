@@ -1,0 +1,75 @@
+---
+title: "파이차트 지도"
+author: Sang-Il Lee
+date-modified: last-modified
+number-sections: true
+format: 
+  html: 
+    toc: true
+code-link: true
+code-copy: true
+lightbox: true
+execute: 
+  warning: false
+  error: false
+  freeze: auto
+editor: visual
+editor_options: 
+  chunk_output_type: console
+---
+
+## leaflet.minicharts의 활용
+
+### 준비
+
+필수적인 패키지를 불러온다.
+
+```{r}
+library(tidyverse)
+library(leaflet)
+library(leaflet.minicharts)
+library(sf)
+```
+
+서울시 2023년 구단위 남녀 인구수 데이터를 불러온다.
+
+```{r}
+data_2023 <- read_rds("data/census_2023_gen.rds")
+seoul_gu <- st_read("data/SEOUL_GU_2022_4Q.shp")
+seoul_gu_4326 <- seoul_gu |> 
+  st_transform(crs = 4326)
+seoul_gu_4326 <- seoul_gu_4326 |> 
+  left_join(
+    data_2023, join_by(SGG1_CD == C1)
+  )
+seoul_gu_centroid <- seoul_gu_4326 |> 
+  st_centroid() |> 
+  mutate(
+    lon = st_coordinates(geometry)[, "X"],
+    lat = st_coordinates(geometry)[, "Y"]
+  ) |> 
+  st_drop_geometry()
+
+```
+
+```{r}
+colors <- c("#66c2a5", "#fc8d62")
+labels <- sprintf("<strong>%s</strong><br/>%g<br/>%g",
+  seoul_gu_centroid$SGG1_NM, seoul_gu_centroid$male, seoul_gu_centroid$female) |> lapply(htmltools::HTML)
+
+leaflet() |> 
+  addPolygons(
+    data = seoul_gu_4326, 
+    color = "black",
+    weight = 1,
+    fillOpacity = 0
+  ) |> 
+  addMinicharts(
+    seoul_gu_centroid$lon, seoul_gu_centroid$lat,
+    type = "pie",
+    chartdata = seoul_gu_centroid[, c("male", "female")], 
+    colorPalette = colors, 
+    width = 80 * sqrt(seoul_gu_centroid$total) / sqrt(max(seoul_gu_centroid$total)), transitionTime = 0
+  )
+
+```
